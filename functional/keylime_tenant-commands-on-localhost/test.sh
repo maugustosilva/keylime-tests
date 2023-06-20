@@ -64,12 +64,11 @@ rlJournalStart
 
     rlPhaseStartTest "-c regstatus"
         rlRun -s "keylime_tenant -c regstatus"
-        rlAssertGrep "{\"code\": 200, \"status\": \"Agent $AGENT_ID exists on registrar 127.0.0.1 port 8891.\"" $rlRun_LOG
+        rlAssertGrep "{\"$AGENT_ID\": {\"operational_state\": \"Registered\"" $rlRun_LOG -E
     rlPhaseEnd
 
     rlPhaseStartTest "-c status"
         rlRun -s "keylime_tenant -c status"
-        rlAssertGrep "{\"code\": 200, \"status\": \"Agent $AGENT_ID exists on registrar 127.0.0.1 port 8891.\"" $rlRun_LOG
         rlAssertGrep "{\"$AGENT_ID\": {\"operational_state\": \"(Get Quote|Provide V)\"" $rlRun_LOG -E
     rlPhaseEnd
 
@@ -106,7 +105,7 @@ rlJournalStart
     rlPhaseStartTest "-c regdelete"
         rlRun -s "keylime_tenant -c regdelete"
         rlRun -s "keylime_tenant -c regstatus"
-        rlAssertGrep "{\"code\": 404, \"status\": \"Agent $AGENT_ID does not exist on registrar 127.0.0.1 port 8891.\"" $rlRun_LOG
+        rlAssertGrep "INFO - Agent $AGENT_ID does not exist on Registrar\"" $rlRun_LOG
     rlPhaseEnd
 
     rlPhaseStartTest "-c delete"
